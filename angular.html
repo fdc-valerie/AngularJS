@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Angular Simple</title>
+	 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+</head>
+	<body>
+		<div ng-app="test" ng-controller="Ctrl">
+		First Name : <input type="text" ng-model="employee.first_name">
+		Last Name : <input type="text" ng-model="employee.last_name">
+		<p>My name is {{employee.fullName()| uppercase}}</p>
+
+		<div >
+			<table>
+			<tr>
+				<th>Subject Code</th>
+				<th>Subject Schedule</th>
+			</tr>
+			<tr ng-repeat = "subject in subjects">
+				<td>  {{subject.code}}</td>
+				<td>  {{subject.schedule}} </td>
+			</tr>
+			</table>
+			<p> URL is {{myUrl}}</p>
+		</div>
+		</div>
+
+	
+	
+	<script>
+		var app = angular.module('test',[]);
+		app.controller('Ctrl', function($scope,$location){
+			$scope.first_name="";
+			$scope.last_name="";
+			
+			$scope.employee={
+				first_name:"",
+				last_name:"",
+
+				fullName: function(){
+					var employeeObject;
+					employeeObject = $scope.employee;
+					return employeeObject.first_name+ " " + employeeObject.last_name;
+				}
+			};
+
+			$scope.subjects=[
+					{code:'ICT 212', schedule:'9:00-12:00 TTH'},
+					{code:'IT 138', schedule:'7:30-9:00 MW'}
+			];
+		
+			$scope.myUrl = $location.absUrl();
+
+
+		});
+	</script>
+	</body>
+</html>
