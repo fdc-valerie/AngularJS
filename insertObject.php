@@ -6,5 +6,6 @@
 	$pdo = new AngularClass();
 	if($pdo){
 		$pdo->insertRow($inputs);
+		header("refresh:1;url=angular2.php");
 	 }
 ?>
