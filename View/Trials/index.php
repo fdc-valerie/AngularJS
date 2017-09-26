@@ -2,7 +2,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.js"></script>
 <script>
 	var app = angular.module('test',[]);
-	app.controller('Ctrl', function($scope, $http){
+	app.controller('Ctrl', function($scope, $http, filterFilter){
 	 	$scope.datas = [];
 	 	
 	 	 $scope.delete = function(index){
@@ -13,43 +13,39 @@
 					$scope.getTrials();
 			});
   		}
-  		$scope.search = function(){
-  			if($scope.searchData){
-				var search = $scope.searchData;
-				console.log(search);
-				$http.post('/trials/search',search)
-				.then(function success(response){
-				console.log(response);
+
+ 		$scope.searchData = function(){
+ 			// console.log('test');
+ 			if($scope.search){
+ 				 var search ={
+ 				 	search:$scope.search
+ 				 };
+ 				$http.post('/trials/search',search)
+				.then(function success(e){
+					console.log(e);
+					$scope.datas = e.data;
 				});
   			}
-  		}
-  			
-  		
-	 	$scope.getTrials = function(){
+ 		}
+ 		
+		$scope.getTrials = function(){
 		 	$http.get('../Trials/view')
 			.then(function success(e){
 				$scope.datas = e.data;
 			});
 	 	}
 		$scope.getTrials();
+
+
 	}); 
 </script>
-	<body>
+<body>
 	<div ng-app="test">
 			<div ng-controller="Ctrl">
-			<?php 
-				echo $this->Form->create('Trial', array('default'=>false));
-				echo $this->Form->input('search', array(
-					'id' => 'searchid',
-					'ng-model' => 'searchData')
-				);
-				echo	 $this->Form->button('Search',array(
-					'type' => 'submit',
-					'ng-click' => 'search()'
-					)
-				);
-				echo $this->Form->end();
-			 ?>
+			<form method="POST">
+				<input type="text" name="search" ng-model="search">
+				<button class="btn btn-primary" type="submit" ng-click="searchData()">Search</button>
+			</form>
 				<div class="table-responsive">
 					<table>
 						<thead>
@@ -60,7 +56,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr ng-repeat="row in datas">
+							<tr ng-repeat="row in datas ">
 								<td>{{ row.Trial.id }}</td>
 								<td>{{ row.Trial.username }}</td>
 								<td><a ng-href="/trials/update/{{ row.Trial.id }}">Edit</a> |
@@ -72,15 +68,5 @@
 				</div>
 			</div>
 		</div>
+</body>
 
-<?php 
-	echo $this->Paginator->prev(
-	'« Previous ',
-	null ,
-	null ,
-	array('class' => 'disabled')
-	); 
-	echo $this->Paginator->numbers();
-	echo $this->Paginator->counter(array(
-		'format' => ' Page {:page} of {:page}'));
-?>

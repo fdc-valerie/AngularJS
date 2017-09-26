@@ -13,9 +13,6 @@
 		public $helpers = array('Js');
 
 		public function index(){
-			// $trial = $this->Trial->findByid();
-			// $this->set(compact('trial'));
-		$products = $this->paginate('Trial');
 		}
 		public function view(){
 			$this->autoRender= false;
@@ -68,14 +65,14 @@
 			}
 		}
 		public function search(){
-			$this->layout=false;
+			$this->autoRender = false;
 			if($this->request->is('post')){
-				$findData = $this->request->input('json_decode');
-				pr($findData);
-				$keyword = isset($findData['searchData']) ? $find['searchData'] : '';
+				$postdata = array();
+				$postdata = (array)$this->request->input('json_decode');
+				$keyword = isset($postdata['search']) ? $postdata['search'] : '';
 				$data=$this->Trial->find('all', array(
 					'conditions' => array(
-						'Trial.username LIKE' => $keyword
+						'Trial.username LIKE' => $keyword.'%'
 						)
 					)
 				);
